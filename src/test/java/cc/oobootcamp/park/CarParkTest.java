@@ -3,23 +3,19 @@ package cc.oobootcamp.park;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.stream.IntStream;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CarParkTest {
-    private CarPark carPark;
-
-    private String prefillFirstCarPlate = "c1_plate";
-    private String prefillSecondCarPlate = "c2_plate";
-    private String prefillThirdCarPlate = "c3_plate";
-    private String prefillForthCarPlate = "c4_plate";
+    private static final int CAR_PARK_SIZE = 5;
 
     @Before
-    public void setUp() {
-        carPark = new CarPark(4);
-    }
+    public void setUp() {}
 
     @Test
     public void should_get_ticket_with_parking_number_when_parking_car_given_car_park_has_parking_lots_available() {
+        CarPark carPark = new CarPark(CAR_PARK_SIZE);
         String firstCarPlate = "c1_plate";
         String secondCarPlate = "c2_plate";
         Car firstCar = new Car(firstCarPlate);
@@ -37,31 +33,42 @@ public class CarParkTest {
         String extraCarPlate = "one_more";
         Car extraCar = new Car(extraCarPlate);
 
-        fillCarPark();
+        CarPark carPark = buildFilledCarPark(CAR_PARK_SIZE);
         String fullMessage = carPark.park(extraCar);
         assertThat(fullMessage).isEqualTo("The car park is full");
     }
 
     @Test
     public void should_get_correct_car_when_pick_up_car_given_holding_a_valid_parking_ticket() {
-        fillCarPark();
+        String testCarPlate = "testCar1";
+        CarPark carPark = buildFilledCarPark(CAR_PARK_SIZE);
 
-        String pickMessage = carPark.pick(prefillFirstCarPlate);
-        assertThat(pickMessage).isEqualTo("Pick up car " + prefillFirstCarPlate);
+        String pickMessage = carPark.pick(testCarPlate);
+        assertThat(pickMessage).isEqualTo("Pick up car " + testCarPlate);
     }
 
     @Test
     public void should_get_could_not_get_car_message_when_pick_up_car_given_holding_an_invalid_ticket() {
-        fillCarPark();
+        CarPark carPark = buildFilledCarPark(CAR_PARK_SIZE);
 
         String pickMessage = carPark.pick("plate does not exist");
         assertThat(pickMessage).isEqualTo("Could not find your car");
     }
 
-    private void fillCarPark() {
-        carPark.park(new Car(prefillFirstCarPlate));
-        carPark.park(new Car(prefillSecondCarPlate));
-        carPark.park(new Car(prefillThirdCarPlate));
-        carPark.park(new Car(prefillForthCarPlate));
+    @Test
+    public void should_get_could_not_get_car_message_when_pick_up_car_twice_given_holding_a_valid_ticket() {
+        String testCarPlate = "testCar1";
+        CarPark carPark = buildFilledCarPark(CAR_PARK_SIZE);
+
+        carPark.pick(testCarPlate);
+        String pickAgainMessage = carPark.pick(testCarPlate);
+
+        assertThat(pickAgainMessage).isEqualTo("Could not find your car");
+    }
+
+    private CarPark buildFilledCarPark(int size) {
+        CarPark carPark = new CarPark(size);
+        IntStream.range(0, CAR_PARK_SIZE).forEach(i -> carPark.park(new Car("testCar" + i)));
+        return carPark;
     }
 }

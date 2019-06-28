@@ -1,30 +1,28 @@
 package cc.oobootcamp.park;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CarPark {
     private int size;
-    private List<Car> parkList;
+    private Map<String, Car> parkMap;
 
     public CarPark(int size) {
         this.size = size;
-        parkList = new ArrayList();
+        parkMap = new HashMap<>();
     }
 
     public String park(Car car) {
-        if (parkList.size() < size) {
-            parkList.add(car);
+        if (parkMap.size() < size) {
+            parkMap.put(car.getPlate(), car);
             return "Ticket of car " + car.getPlate();
         }
         return "The car park is full";
     }
 
     public String pick(String pickCarPlate) {
-        return parkList.stream()
-                .filter(car -> car.getPlate() == pickCarPlate)
-                .findFirst()
-                .map(car -> "Pick up car " + car.getPlate())
-                .orElse("Could not find your car");
+        if (parkMap.containsKey(pickCarPlate)) {
+            return "Pick up car " + parkMap.remove(pickCarPlate).getPlate();
+        }
+        return "Could not find your car";
     }
 }

@@ -25,4 +25,12 @@ public class CarPark {
         }
         return "Could not find your car";
     }
+
+    public boolean isAvailable() {
+        return this.parkMap.size() < this.size;
+    }
+
+    int getAvailableLots() {
+        return size - parkMap.size();
+    }
 }

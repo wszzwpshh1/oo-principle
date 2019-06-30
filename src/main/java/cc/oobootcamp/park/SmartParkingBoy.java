@@ -3,13 +3,14 @@ package cc.oobootcamp.park;
 import java.util.Comparator;
 import java.util.List;
 
-public class SmartParkingBoy {
+public class SmartParkingBoy implements IParkable {
     private List<CarPark> carParks;
 
     public SmartParkingBoy(List<CarPark> carParks) {
         this.carParks = carParks;
     }
 
+    @Override
     public String park(Car car) {
         CarPark carPark = null;
         try {
@@ -20,6 +21,7 @@ public class SmartParkingBoy {
         return carPark.park(car);
     }
 
+    @Override
     public String pick(String parkingTicket) {
         for (CarPark carPark : carParks) {
             String pickResult = carPark.pick(parkingTicket);
